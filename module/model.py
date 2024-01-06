@@ -4,6 +4,7 @@ from module.pure_index import Pure_Index
 from module.decoder_embedding import Decoder_Embedding
 from module.encoder_embedding import Encoder_Embedding
 from module.decoder_index_small import Decoder_Index_Small
+from module.decoder_index import Decoder_Index
 
 class Model(nn.Module):
     def __init__(self, cfg):
@@ -20,6 +21,8 @@ class Model(nn.Module):
             self.decoder = Decoder_Embedding(cfg.decoder_embedding)
         elif cfg.decoder_type == 'decode_index_small':
             self.decoder = Decoder_Index_Small(cfg.decode_index_small)
+        elif cfg.decoder_type == 'decode_index':
+            self.decoder = Decoder_Index(cfg.decode_index)
         
         if cfg.encoder_type == 'pure_embedding' or cfg.encoder_type == 'encoder_embedding':
             self.mode = 'embedding'
