@@ -1,6 +1,7 @@
 import torch.nn as nn
 from module.pure_embedding import Pure_Embedding
 from module.decoder_embedding import Decoder_Embedding
+from module.encoder_embedding import Encoder_Embedding
 
 class Model(nn.Module):
     def __init__(self, cfg):
@@ -8,10 +9,12 @@ class Model(nn.Module):
         self.cfg = cfg
         if cfg.encoder_type == 'pure_embedding':
             self.encoder = Pure_Embedding(cfg.pure_embedding)
+        elif cfg.encoder_type == 'encoder_embedding':
+            self.encoder = Encoder_Embedding(cfg.encoder_embedding)
         if cfg.decoder_type == 'decoder_embedding':
             self.decoder = Decoder_Embedding(cfg.decoder_embedding)
         
-        if cfg.encoder_type == 'pure_embedding':
+        if cfg.encoder_type == 'pure_embedding' or cfg.encoder_type == 'encoder_embedding':
             self.mode = 'embedding'
     
     def encoder_decoder_embedding(self, batch, step):

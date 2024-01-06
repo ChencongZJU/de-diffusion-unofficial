@@ -24,7 +24,7 @@ single_image:
   path: 'data/test.jpg'
 
 model:
-  encoder_type: 'pure_embedding'
+  encoder_type: 'encoder_embedding'
   decoder_type: 'decoder_embedding'
 
   pure_embedding:
@@ -43,6 +43,25 @@ model:
   pure_index:
 
   encoder_embedding:
+    device: ${device}
+    clip_model_name: 'coca_ViT-L-14'
+    clip_pretrained_model_name_or_path: 'laion/mscoco_finetuned_CoCa-ViT-L-14-laion2B-s13B-b90k/open_clip_pytorch_model.bin'
+    num_transformer_block: 5
+    query_num: 77
+    query_dim: 768
+    feature_dim: 1024
+    block:
+      input_dim: 768
+      num_heads: 8
+      mlp_hidden_features: 128
+    training_params:
+      lr: 0.0005
+      min_betas: 0.9
+      max_betas: 0.99
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.000005
 
   encoder_index:
 
