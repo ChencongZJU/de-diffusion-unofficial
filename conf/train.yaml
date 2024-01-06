@@ -21,11 +21,11 @@ test_dataset:
   split: 'test'
 
 single_image:
-  path: 'data/test.jpg'
+  path: 'data/test1.png'
 
 model:
-  encoder_type: 'encoder_embedding'
-  decoder_type: 'decoder_embedding'
+  encoder_type: 'pure_index'
+  decoder_type: 'decode_index_small'
 
   pure_embedding:
     device: ${device}
@@ -41,6 +41,17 @@ model:
       eta_min: 0.0003
 
   pure_index:
+    device: ${device}
+    query_num: 75
+    feature_dim: 998
+    training_params:
+      lr: 0.3
+      min_betas: 0.9
+      max_betas: 0.999
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.0003
 
   encoder_embedding:
     device: ${device}
@@ -55,7 +66,7 @@ model:
       num_heads: 8
       mlp_hidden_features: 128
     training_params:
-      lr: 0.0005
+      lr: 0.00005
       min_betas: 0.9
       max_betas: 0.99
       weight_decay: 0.01
@@ -73,4 +84,13 @@ model:
 
   decode_index:
 
+
   decode_index_small:
+    device: ${device}
+    unet_pretrained_model_name_or_path: 'stabilityai/stable-diffusion-2-1-base'
+    half_precision_weights: False
+    do_classifier_free_guidance: True
+    whole_token_lens: 49408
+    small_token_lens: 1000
+    feature_dim: 1024
+    gt_prompt: 'an davilishlishblog closeup berries jar through largerefrerefrejar glass jar eachother glass on an on peach hardwood closeup glass homemade osmixed glass jar called relating called an oranges fruit shown slices eachother containing relating an orange orange slices slices between black grapes open chunks orange oranges and berry blackblueberry consist though towards pink closeup facing that background pink wall background pink pink wall wall closeup chia grapes recipe'
