@@ -1,0 +1,10 @@
+ImageNet2012
+stabilityai
+outputs/
+*.pyc
+laion
+checkpoints/
+runwayml
+wandb/
+tmpsave/
+tmpsave2/

@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "train",
+            "type": "python",
+            "request": "launch",
+            "program": "train.py",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--config-name",
+                "train"
+            ]
+        },
+        {
+            "name": "text_to_image",
+            "type": "python",
+            "request": "launch",
+            "program": "text_to_image.py",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+    ]
+}
