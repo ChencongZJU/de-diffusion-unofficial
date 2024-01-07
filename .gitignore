@@ -8,3 +8,6 @@ runwayml
 wandb/
 tmpsave/
 tmpsave2/
+embedding/
+embed_to_image.png
+re_embed_to_image.png

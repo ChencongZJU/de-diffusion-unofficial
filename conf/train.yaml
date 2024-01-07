@@ -8,6 +8,7 @@ mode:
 train_setting:
   max_steps:  100000
   inference_steps: 100
+  embedding_save_steps: 100
 
 train_dataset:
   root: 'ImageNet2012'
@@ -21,12 +22,12 @@ test_dataset:
   split: 'test'
 
 single_image:
-  path: 'data/test.jpg'
+  path: 'data/test1.png'
 
 model:
   # encoder_type: 'pure_index'
   # decoder_type: 'decode_index'
-  encoder_type: 'encoder_embedding'
+  encoder_type: 'pure_embedding'
   decoder_type: 'decoder_embedding'
 
   pure_embedding:

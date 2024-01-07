@@ -1,3 +1,5 @@
+import os
+import torch
 import torch.nn as nn
 from module.pure_embedding import Pure_Embedding
 from module.pure_index import Pure_Index
@@ -66,3 +68,12 @@ class Model(nn.Module):
         elif self.mode == 'index':
             image = self.inference_index(batch, step)
         return image
+
+    def save_embedding_embedding(self, batch, step):
+        return self.encoder.encode(batch['encode_pixel'], step)
+
+    def save_embedding(self, dir, batch, step):
+        if self.mode == 'embedding':
+            embedding = self.save_embedding_embedding(batch, step)
+        torch.save(embedding, os.path.join(dir, f'{step}.pt'))
+            

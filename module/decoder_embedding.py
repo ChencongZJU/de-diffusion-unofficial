@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 from diffusers import DDIMScheduler, DDPMScheduler, StableDiffusionPipeline, PNDMScheduler
 from diffusers.image_processor import VaeImageProcessor
-
+from utils.utils import seed_everything
 
 class Decoder_Embedding():
     def __init__(self, cfg) -> None:
@@ -43,6 +43,7 @@ class Decoder_Embedding():
             p.requires_grad_(False)
     
     def inference_embedding(self, prompt_embeds, num_inference_steps=50, guidance_scale = 7.5):
+        # seed_everything(0)
         # Prepare latents
         latents = torch.randn(1, 4, 64, 64).to('cuda:0')
         
@@ -79,10 +80,12 @@ class Decoder_Embedding():
         return image
     
     def decode(self, images, embedding):
+        # seed_everything(0)
         # Convert images to latent space
         latents = self.vae.encode(images).latent_dist.sample()
         latents = latents * self.vae.config.scaling_factor
         
+        # seed_everything(0)
         # Sample noise that we'll add to the latents
         noise = torch.randn_like(latents)
         

@@ -9,6 +9,9 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "2"
+            },
             "console": "integratedTerminal",
             "justMyCode": false
         },
@@ -18,7 +21,7 @@
             "request": "launch",
             "program": "train.py",
             "env": {
-                "CUDA_VISIBLE_DEVICES": "1"
+                "CUDA_VISIBLE_DEVICES": "3"
             },
             "console": "integratedTerminal",
             "justMyCode": false,

@@ -27,3 +27,6 @@ class Pure_Embedding(nn.Module):
     
     def encode(self, image, step):
         return self.embedding.weight.unsqueeze(0)
+    
+    def save_embedding(self, batch, step):
+        return self.embedding.weight.unsqueeze(0)

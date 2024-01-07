@@ -42,7 +42,7 @@ vae = pipe.vae
 # del pipe
 vae_scale_factor = 2 ** (len(vae.config.block_out_channels) - 1)
 image_processor = VaeImageProcessor(vae_scale_factor=vae_scale_factor)
-prompt = 'an davilishlishblog closeup berries jar through largerefrerefrejar glass jar eachother glass on an on peach hardwood closeup glass homemade osmixed glass jar called relating called an oranges fruit shown slices eachother containing relating an orange orange slices slices between black grapes open chunks orange oranges and berry blackblueberry consist though towards pink closeup facing that background pink wall background pink pink wall wall closeup chia grapes recipe'
+prompt = 'an cartoon albu books vscocam drawing cartoon beagle four wearing blue blusweaters each rear pink pants walking an on zebra crossing crossing crossing cartoon os midcentury beagle beagle called these four an dog dog shown walking lineup unison wearing an white beagle beagle bears between spelled font white shoes beagle beagle mco browns brown monochrome placed front with yellow sweater on on font gray background on gray green background background text minimalist cartoon poster'
 # text_inputs = tokenizer(
 #     prompt,
 #     padding="max_length",
@@ -103,7 +103,7 @@ model_path = "stabilityai/stable-diffusion-2-1-base"
 pipe = StableDiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float32)
 pipe.to("cuda")
 
-image = pipe(prompt="an davilishlishblog closeup berries jar through largerefrerefrejar glass jar eachother glass on an on peach hardwood closeup glass homemade osmixed glass jar called relating called an oranges fruit shown slices eachother containing relating an orange orange slices slices between black grapes open chunks orange oranges and berry blackblueberry consist though towards pink closeup facing that background pink wall background pink pink wall wall closeup chia grapes recipe").images[0]
+image = pipe(prompt="an cartoon albu books vscocam drawing cartoon beagle four wearing blue blusweaters each rear pink pants walking an on zebra crossing crossing crossing cartoon os midcentury beagle beagle called these four an dog dog shown walking lineup unison wearing an white beagle beagle bears between spelled font white shoes beagle beagle mco browns brown monochrome placed front with yellow sweater on on font gray background on gray green background background text minimalist cartoon poster").images[0]
 image.save("text_to_image2.png")
 
 

@@ -1,5 +1,6 @@
 import os
 import hydra
+import shutil
 from omegaconf import OmegaConf
 from rich.console import Console
 from module.model import Model
@@ -45,6 +46,7 @@ class Trainer():
         
         # prepare save dir and wandb
         self.init_dir_wandb(cfg)
+        self.save_code_snapshot()
 
     def init_dir_wandb(self, cfg):
         day_timestamp = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -56,6 +58,14 @@ class Trainer():
         self.save_dir = Path(f"./checkpoints/{day_timestamp}/{hms_timestamp}")
         if not self.save_dir.exists():
             self.save_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.images_save_dir = self.save_dir / "images"
+        if not self.images_save_dir.exists():
+            self.images_save_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.embedding_save_dir = self.save_dir / "embedding"
+        if not self.embedding_save_dir.exists():
+            self.embedding_save_dir.mkdir(parents=True, exist_ok=True)
 
         if cfg.use_wandb:
             wandb.init(
@@ -67,7 +77,26 @@ class Trainer():
                 # magic=True,
                 save_code=True,
             )
-            
+
+    def save_code_snapshot(self):
+        # learned from threestudio
+        self.code_dir = self.save_dir / "code"
+        if not self.code_dir.exists():
+            self.code_dir.mkdir(parents=True, exist_ok=True)
+
+        files = get_file_list()
+        for f in files:
+            if os.path.isdir(f):
+                continue
+            dst = self.code_dir / f
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(f, str(dst))
+
+        config_dir = self.save_dir / "config" / "parsed.yaml"
+        if not config_dir.parent.exists():
+            config_dir.parent.mkdir(parents=True, exist_ok=True)
+        dump_config(str(config_dir), self.cfg)
+         
     def prepare_transforms(self):
         def _convert_to_rgb(image):
             return image.convert('RGB')
@@ -112,7 +141,10 @@ class Trainer():
                     break
                 if self.step % self.cfg.train_setting.inference_steps == 0:
                     image = self.model.inference(self.single_batch, self.step)[0]
-                    image.save(os.path.join(self.save_dir, f'{self.step}.png'))
+                    image.save(os.path.join(self.images_save_dir, f'{self.step}.png'))
+                if self.step % self.cfg.train_setting.embedding_save_steps == 0:
+                    self.model.save_embedding(self.embedding_save_dir, self.single_batch, self.step)
+                
                 if self.cfg.use_wandb:
                     wandb.log({
                         "loss": loss
