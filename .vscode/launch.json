@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "env": {
-                "CUDA_VISIBLE_DEVICES": "2"
+                "CUDA_VISIBLE_DEVICES": "1"
             },
             "console": "integratedTerminal",
             "justMyCode": false
@@ -21,13 +21,28 @@
             "request": "launch",
             "program": "train.py",
             "env": {
-                "CUDA_VISIBLE_DEVICES": "3"
+                "CUDA_VISIBLE_DEVICES": "1"
             },
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
                 "--config-name",
                 "train"
+            ]
+        },
+        {
+            "name": "train_xl",
+            "type": "python",
+            "request": "launch",
+            "program": "train_xl.py",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--config-name",
+                "train_xl"
             ]
         },
         {

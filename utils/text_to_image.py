@@ -105,14 +105,3 @@ pipe.to("cuda")
 
 image = pipe(prompt="an cartoon albu books vscocam drawing cartoon beagle four wearing blue blusweaters each rear pink pants walking an on zebra crossing crossing crossing cartoon os midcentury beagle beagle called these four an dog dog shown walking lineup unison wearing an white beagle beagle bears between spelled font white shoes beagle beagle mco browns brown monochrome placed front with yellow sweater on on font gray background on gray green background background text minimalist cartoon poster").images[0]
 image.save("text_to_image2.png")
-
-
-# from diffusers import StableDiffusionXLPipeline
-# import torch
-# seed_everything(0)
-# pipe = StableDiffusionXLPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16)
-# pipe.to("cuda")
-
-# prompt = "an artrhadigitally sart illustration woman face wearing colorful colorful paints face painted head pink lipstick though an among colourful confetti confetti realism pinup osjanumonroe monroe resembrelating called an face woman shown face smelling upwards multiple an colorful florals roses hats above many paints with earrings turmeric makeup brightly orange red pink wth scattered among yellow oranges flying flying butterflies teal background on teal blue background lips eyebrow hadid cg poster"
-# image = pipe(prompt, num_inference_steps=30, guidance_scale=7.5).images[0]
-# image.save("txet_to_image_xl.png")

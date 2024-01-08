@@ -1,0 +1,121 @@
+device: cuda
+use_wandb: false
+
+mode:
+  is_train: true
+  train_single_image: true
+
+train_setting:
+  max_steps:  100000
+  inference_steps: 100
+  embedding_save_steps: 100
+
+test_dataset:
+  root: 'ImageNet2012'
+  split: 'test'
+
+single_image:
+  path: 'data/test.jpg'
+
+model:
+  encoder_type: 'pure_index_xl'
+  decoder_type: 'decoder_index_small_xl'
+  # encoder_type: 'encoder_embedding_xl'
+  # decoder_type: 'decoder_embedding_xl'
+
+  pure_embedding_xl:
+    device: ${device}
+    query_num: 77
+    feature_dim: 2048
+    training_params:
+      lr: 0.03
+      min_betas: 0.9
+      max_betas: 0.99
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.0003
+  
+  pure_index_xl:
+    device: ${device}
+    query_num: 75
+    # feature_dim: 49406
+    feature_dim: 998
+    training_params:
+      lr: 0.03
+      min_betas: 0.9
+      max_betas: 0.999
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.0003
+  
+  encoder_embedding_xl:
+    device: ${device}
+    clip_model_name: 'coca_ViT-L-14'
+    clip_pretrained_model_name_or_path: 'laion/mscoco_finetuned_CoCa-ViT-L-14-laion2B-s13B-b90k/open_clip_pytorch_model.bin'
+    num_transformer_block: 5
+    query_num: 77
+    query_dim: 768
+    feature_dim: 2048
+    block:
+      input_dim: 768
+      num_heads: 8
+      mlp_hidden_features: 128
+    training_params:
+      lr: 0.0005
+      min_betas: 0.9
+      max_betas: 0.99
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.000005
+
+  encoder_index_xl:
+    device: ${device}
+    clip_model_name: 'coca_ViT-L-14'
+    clip_pretrained_model_name_or_path: 'laion/mscoco_finetuned_CoCa-ViT-L-14-laion2B-s13B-b90k/open_clip_pytorch_model.bin'
+    num_transformer_block: 5
+    query_num: 77
+    query_dim: 768
+    feature_dim: 49406
+    block:
+      input_dim: 768
+      num_heads: 8
+      mlp_hidden_features: 128
+    training_params:
+      lr: 0.0005
+      min_betas: 0.9
+      max_betas: 0.99
+      weight_decay: 0.01
+      warmup_steps: 10000
+      T_mult: 1
+      eta_min: 0.000005
+
+  decoder_embedding_xl:
+    device: ${device}
+    unet_pretrained_model_name_or_path: 'stabilityai/stable-diffusion-xl-base-1.0'
+    half_precision_weights: False
+    do_classifier_free_guidance: False
+    original_size: 1024
+    target_size: 1024
+  
+  decoder_index_xl:
+    device: ${device}
+    unet_pretrained_model_name_or_path: 'stabilityai/stable-diffusion-xl-base-1.0'
+    half_precision_weights: False
+    do_classifier_free_guidance: False
+    original_size: 1024
+    target_size: 1024
+  
+  decoder_index_small_xl:
+    device: ${device}
+    unet_pretrained_model_name_or_path: 'stabilityai/stable-diffusion-xl-base-1.0'
+    half_precision_weights: False
+    do_classifier_free_guidance: True
+    original_size: 1024
+    target_size: 1024
+    whole_token_lens: 49408
+    small_token_lens: 1000
+    feature_dim: 1024
+    gt_prompt: "an artrhadigitally sart illustration woman face wearing colorful colorful paints face painted head pink lipstick though an among colourful confetti confetti realism pinup osjanumonroe monroe resembrelating called an face woman shown face smelling upwards multiple an colorful florals roses hats above many paints with earrings turmeric makeup brightly orange red pink wth scattered among yellow oranges flying flying butterflies teal background on teal blue background lips eyebrow hadid cg poster"
