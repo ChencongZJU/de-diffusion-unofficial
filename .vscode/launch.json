@@ -36,7 +36,7 @@
             "request": "launch",
             "program": "train_xl.py",
             "env": {
-                "CUDA_VISIBLE_DEVICES": "1"
+                "CUDA_VISIBLE_DEVICES": "0"
             },
             "console": "integratedTerminal",
             "justMyCode": false,

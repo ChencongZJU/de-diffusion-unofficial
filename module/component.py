@@ -23,7 +23,7 @@ class PositionalEncoding(nn.Module):
         # return self.dropout(x)
 
 class Mlp(nn.Module):
-    def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
+    def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.1):
         super().__init__()
         out_features = out_features or in_features
         hidden_features = hidden_features or in_features
@@ -60,16 +60,18 @@ class Block(nn.Module):
     def __init__(self, cfg):
         super(Block, self).__init__()
         self.ln_q = LayerNorm(cfg.input_dim)
-        self.ln_k = LayerNorm(cfg.input_dim)
+        self.ln_k = LayerNorm(cfg.kdim)
         self.self_attention = nn.MultiheadAttention(cfg.input_dim, cfg.num_heads)
-        self.cross_attention = nn.MultiheadAttention(cfg.input_dim, cfg.num_heads)
+        self.cross_attention = nn.MultiheadAttention(cfg.input_dim, cfg.num_heads, kdim=cfg.kdim, vdim=cfg.kdim)
         self.mlp = Mlp(cfg.input_dim, cfg.mlp_hidden_features, cfg.input_dim)
         self.init_parameters()
 
     def init_parameters(self):
         nn.init.xavier_uniform_(self.self_attention.in_proj_weight)
         nn.init.xavier_uniform_(self.self_attention.out_proj.weight)
-        nn.init.xavier_uniform_(self.cross_attention.in_proj_weight)
+        nn.init.xavier_uniform_(self.cross_attention.q_proj_weight)
+        nn.init.xavier_uniform_(self.cross_attention.k_proj_weight)
+        nn.init.xavier_uniform_(self.cross_attention.v_proj_weight)
         nn.init.xavier_uniform_(self.cross_attention.out_proj.weight)
         # nn.init.xavier_uniform_(self.mlp.weight)  # 使用 Xavier初始化
         # nn.init.zeros_(self.mlp.bias)  # 将偏置初始化为零

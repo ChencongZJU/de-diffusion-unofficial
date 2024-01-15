@@ -16,6 +16,7 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel
 from PIL import Image
 from torchvision import transforms
+from transformers import CLIPProcessor, CLIPModel
 from utils.utils import seed_everything
 from utils.misc import(
     step_check,
@@ -99,15 +100,16 @@ class Trainer():
     def prepare_transforms(self):
         def _convert_to_rgb(image):
             return image.convert('RGB')
-        self.encode_transform = transforms.Compose(
-            [
-                transforms.Resize(224, interpolation=transforms.InterpolationMode.BICUBIC, max_size=None, antialias=None),
-                transforms.CenterCrop(size=(224, 224)),
-                _convert_to_rgb,
-                transforms.ToTensor(),
-                transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
-            ]
-        )
+        # self.encode_transform = transforms.Compose(
+        #     [
+        #         transforms.Resize(224, interpolation=transforms.InterpolationMode.BICUBIC, max_size=None, antialias=None),
+        #         transforms.CenterCrop(size=(224, 224)),
+        #         _convert_to_rgb,
+        #         transforms.ToTensor(),
+        #         transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))
+        #     ]
+        # )
+        self.encode_transform = CLIPProcessor.from_pretrained("clip-vit-large-patch14")
         self.decode_transform = transforms.Compose(
             [
                 transforms.Resize(512, interpolation=transforms.InterpolationMode.BILINEAR),
@@ -122,7 +124,8 @@ class Trainer():
         image_dir = self.cfg.single_image.path
         image = Image.open(image_dir)
         # image = image.convert("RGB")
-        encode_image = self.encode_transform(image).to(self.device).unsqueeze(0)
+        # encode_image = self.encode_transform(image).to(self.device).unsqueeze(0)
+        encode_image = self.encode_transform(images=image, return_tensors="pt", padding=True)['pixel_values']
         decode_image = self.decode_transform(image).to(self.device).unsqueeze(0)
         self.single_batch = {
             'encode_pixel': encode_image,

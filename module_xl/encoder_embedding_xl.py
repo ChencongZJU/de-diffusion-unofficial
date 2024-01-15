@@ -1,6 +1,7 @@
 import torch
 import open_clip
 import torch.nn as nn
+from transformers import CLIPProcessor, CLIPModel
 from module.component import Block, PositionalEncoding
 import torch.optim.lr_scheduler as lr_scheduler
 
@@ -10,10 +11,11 @@ class Encoder_Embedding_XL(nn.Module):
         self.device = cfg.device
         self.cfg = cfg
         # prepare backbone
-        self.backbone, _ = open_clip.create_model_from_pretrained(
-            model_name=cfg.clip_model_name,
-            pretrained=cfg.clip_pretrained_model_name_or_path,
-        )
+        # self.backbone, _ = open_clip.create_model_from_pretrained(
+        #     model_name=cfg.clip_model_name,
+        #     pretrained=cfg.clip_pretrained_model_name_or_path,
+        # )
+        self.backbone = CLIPModel.from_pretrained(cfg.clip_pretrained_model_name_or_path).vision_model
         self.backbone.to(cfg.device)
         
         # prepare attention pooler
@@ -56,7 +58,8 @@ class Encoder_Embedding_XL(nn.Module):
     
     def encode(self, image, step):
         B, _, _, _ = image.shape
-        feature = self.backbone(image.to(self.device))['image_embs']
+        # feature = self.backbone(image.to(self.device))['image_embs']
+        feature = self.backbone(pixel_values=image.to(self.device))['last_hidden_state'][:,1:,:]
         query = self.query_embed.weight.unsqueeze(0).repeat(B, 1, 1)
         query = self.positional_embedding(query)
         for block in self.blocks:

@@ -7,6 +7,7 @@ from module_xl.decoder_embedding_xl import Decoder_Embedding_XL
 from module_xl.pure_index_xl import Pure_Index_XL
 from module_xl.decoder_index_xl import Decoder_Index_XL
 from module_xl.decoder_index_small_xl import Decoder_Index_Small_XL
+from module_xl.encoder_index_xl import Encoder_Index_XL
 
 class Model_XL(nn.Module):
     def __init__(self, cfg) -> None:
@@ -18,6 +19,8 @@ class Model_XL(nn.Module):
             self.encoder = Encoder_Embedding_XL(cfg.encoder_embedding_xl)
         elif cfg.encoder_type == 'pure_index_xl':
             self.encoder = Pure_Index_XL(cfg.pure_index_xl)
+        elif cfg.encoder_type == 'encoder_index_xl':
+            self.encoder = Encoder_Index_XL(cfg.encoder_index_xl)
         
         if cfg.decoder_type == 'decoder_embedding_xl':
             self.decoder = Decoder_Embedding_XL(cfg.decoder_embedding_xl)
@@ -62,12 +65,14 @@ class Model_XL(nn.Module):
         self.encoder.optimizer.zero_grad()
         return loss.item()
 
+    
     def inference(self, batch, step):
-        if self.mode == 'embedding':
-            image = self.inference_embedding(batch, step)
-        elif self.mode == 'index':
-            image = self.inference_index(batch, step)
-        return image
+        with torch.no_grad():
+            if self.mode == 'embedding':
+                image = self.inference_embedding(batch, step)
+            elif self.mode == 'index':
+                image = self.inference_index(batch, step)
+            return image
 
     def save_embedding_embedding(self, batch, step):
         return self.encoder.encode(batch['encode_pixel'], step)
